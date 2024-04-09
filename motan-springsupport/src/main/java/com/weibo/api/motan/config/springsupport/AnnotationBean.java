@@ -20,9 +20,11 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringValueResolver;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -41,7 +43,7 @@ import java.util.concurrent.ConcurrentMap;
  * <p>
  * Created by fld on 16/5/13.
  */
-public class AnnotationBean implements DisposableBean, BeanFactoryPostProcessor, BeanPostProcessor, BeanFactoryAware, Ordered {
+public class AnnotationBean implements DisposableBean, BeanFactoryPostProcessor, BeanPostProcessor, BeanFactoryAware, Ordered, EmbeddedValueResolverAware {
 
 
     private String id;
@@ -54,6 +56,8 @@ public class AnnotationBean implements DisposableBean, BeanFactoryPostProcessor,
     private BeanFactory beanFactory;
 
     List<ClusterSupport<?>> clusterSupportList = new ArrayList<ClusterSupport<?>>();
+
+    private StringValueResolver stringValueResolver;
 
     public AnnotationBean() {
     }
@@ -559,5 +563,10 @@ public class AnnotationBean implements DisposableBean, BeanFactoryPostProcessor,
     @Override
     public int getOrder() {
         return 0;
+    }
+
+    @Override
+    public void setEmbeddedValueResolver(StringValueResolver resolver) {
+        this.stringValueResolver = resolver;
     }
 }
